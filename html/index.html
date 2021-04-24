@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bhavna: Mixed Langauge Sentiment Analysis</title>
+<!-- 
+Journey Template 
+http://www.templatemo.com/tm-511-journey
+-->
+
+    <!-- load stylesheets -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">  <!-- Google web font "Open Sans" -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css') }}">                <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">                                      <!-- Bootstrap style -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datepicker.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='slick/slick.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='slick/slick-theme.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/templatemo-style.css') }}">                                   <!-- Templatemo style -->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+            <!--[if lt IE 9]>
+              <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+              <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+          <![endif]-->
+        <style>
+             progress {
+                -webkit-appearance: none;
+                appearance: none;
+
+            }
+            progress.negative::-webkit-progress-value{
+                background:#F95428;
+            }
+
+            progress.neutral::-webkit-progress-value{
+                background:rgba(255, 255, 0, 0.589);
+            }
+
+            progress.positive::-webkit-progress-value{
+                background:#35D8B9;
+            }
+
+
+        </style>
+      </head>
+
+      <body>
+        <div class="tm-main-content" id="top">
+            <div class="tm-top-bar-bg"></div>    
+            <div class="tm-top-bar" id="tm-top-bar">
+                <div class="container">
+                    <div class="row">
+                        <nav class="navbar navbar-expand-lg narbar-light">
+                            <a class="navbar-brand mr-auto" href="#">
+                                <img src="{{ url_for('static', filename='img/sentilogo.png') }}" alt="Site logo">
+                                Bhavna: Mixed Langauge Sentiment Analysis
+                            </a>
+                                                  
+                    </nav>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- .tm-top-bar -->
+
+        <div class="tm-page-wrap mx-auto">
+            <section class="tm-banner">
+                <div class="tm-container-outer tm-banner-bg">
+                    <div class="container">
+
+                        <div class="row tm-banner-row tm-banner-row-header">
+                            <div class="col-xs-12">
+                                <div class="tm-banner-header">
+                                    <h1 class="text-uppercase tm-banner-title">Let's begin</h1>
+                                    <img src="{{ url_for('static', filename='img/dots-3.png') }}" alt="Dots">
+                                    <p class="tm-banner-subtitle">Enter Sentences to be analyzed.</p>
+                                    <a href="javascript:void(0)" class="tm-down-arrow-link"><i class="fa fa-2x fa-angle-down tm-down-arrow"></i></a>       
+                                </div>    
+                            </div>  <!-- col-xs-12 -->                      
+                        </div> <!-- row -->
+                        <div class="row tm-banner-row" id="tm-section-search">
+
+                            <form action="http://127.0.0.1:5000/" method="POST" class="tm-search-form tm-section-pad-2">
+                                <div class="form-row tm-search-form-row">                                
+                                        <label for="input">Enter Sentences to be analyzed</label>
+                                        <textarea name="data" class="form-control" id="input" placeholder="Enter Sentences to be analyzed. Enter new sentence in new line."></textarea>
+                                        <input type="submit" class="text-uppercase btn-primary tm-btn" value="Analyze" style="margin-top : 0.5rem;">
+                                </div>                            
+                            </form>                             
+
+                        </div> <!-- row -->
+                        <div class="tm-banner-overlay"></div>
+                    </div>  <!-- .container -->                   
+                </div>     <!-- .tm-container-outer -->                 
+            </section>
+
+            <section class="p-5 tm-container-outer tm-bg-gray">            
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12 mx-auto tm-about-text-wrap text-center">                        
+                            <h2 class="text-uppercase mb-4">Your Results Appear Here</h2>
+
+                            {% for n in output %}
+
+                                <div class="row tm-banner-row" style="padding-top: 1rem;">
+                                    <form class="tm-search-form tm-section-pad-2">
+                                        <div class="form-row tm-search-form-row">                                                                  
+                                                <p><b>Sentence</b></p>
+                                                <p class="form-control" >{{ n["data"] }}</p>
+                                        </div> 
+                                        <div class="form-row tm-search-form-row">                                                                  
+                                            <p><b>Predicted Sentiment</b></p>
+                                            {% if n["pred_out"] == 0 %}
+                                                <p class="form-control" >Negative <img src="{{ url_for('static', filename='img/red.png') }}" alt="Sad Face"> </p>
+                                            {% endif %}
+                                            {% if n["pred_out"] == 1 %}
+                                                <p class="form-control" >Neutral <img src="{{ url_for('static', filename='img/yellow.png') }}" alt="Neutral Face"> </p>
+                                            {% endif %}
+                                            {% if n["pred_out"] == 2 %}
+                                                <p class="form-control" >Positive <img src="{{ url_for('static', filename='img/green.png') }}" alt="Happy Face"> </p>
+                                            {% endif %}
+                                        </div> 
+                                        <div class="form-row tm-search-form-row">    
+                                            <p><b>Prediction Probabilities</b></p>
+                                            <div style="align-items: center;">
+                                                <p class="form-control"></p>
+                                                <p >Negative: {{ n['pred'][0] }}</p> 
+                                                <p class="form-control" style="padding: 0rem; margin: 0rem;"></p>
+                                                <progress value = "{{ n['pred'][0] }}" max = "1" class="negative">Negative</progress>
+                                                <p class="form-control"></p>
+                                                <p>Neutral: {{ n['pred'][1] }}</p> 
+                                                <p class="form-control" style="padding: 0rem; margin: 0rem;"></p>
+                                                <progress value = "{{ n['pred'][1] }}" max = "1" class="neutral">Neutral</progress>
+                                                <p class="form-control"></p>
+                                                <p>Positive: {{ n['pred'][2] }}</p>  
+                                                <p class="form-control" style="padding: 0rem; margin: 0rem;"></p>
+                                                <progress value = "{{ n['pred'][2] }}" max = "1" class="positive">Positive</progress>  
+                                            </div>                                                                                
+                                        </div>
+                                    </form>                             
+                                </div>
+
+                            {% endfor %}
+
+                            
+                            <a href="#" class="text-uppercase btn-primary tm-btn" style="margin-top: 2rem;">Analyze more Sentences</a>                              
+                        </div>
+                    </div>
+                </div>            
+            </section>
+
+            <footer class="tm-container-outer">
+                <p class="mb-0">Copyright © <span class="tm-current-year">2021</span></p>
+            </footer>
+        </div>
+    </div> <!-- .main-content -->
+
+    <!-- load JS files -->
+    <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>             <!-- jQuery (https://jquery.com/download/) -->
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>                    <!-- https://popper.js.org/ -->       
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>                 <!-- https://getbootstrap.com/ -->
+    <script src="{{ url_for('static', filename='js/datepicker.min.js') }}"></script>                <!-- https://github.com/qodesmith/datepicker -->
+    <script src="{{ url_for('static', filename='js/jquery.singlePageNav.min.js') }}"></script>      <!-- Single Page Nav (https://github.com/ChrisWojcik/single-page-nav) -->
+    <script src="{{ url_for('static', filename='slick/slick.min.js') }}"></script>                  <!-- http://kenwheeler.github.io/slick/ -->
+    <script src="{{ url_for('static', filename='js/jquery.scrollTo.min.js') }}"></script>           <!-- https://github.com/flesler/jquery.scrollTo -->
+    <script> 
+
+        /* DOM is ready
+        ------------------------------------------------*/
+        $(function(){
+
+            // Change top navbar on scroll
+            $(window).on("scroll", function() {
+                if($(window).scrollTop() > 100) {
+                    $(".tm-top-bar").addClass("active");
+                } else {                    
+                 $(".tm-top-bar").removeClass("active");
+                }
+            });
+
+            // Smooth scroll to search form
+            $('.tm-down-arrow-link').click(function(){
+                $.scrollTo('#tm-section-search', 300, {easing:'linear'});
+            });
+
+            // Slick Carousel
+            $('.tm-slideshow').slick({
+                infinite: true,
+                arrows: true,
+                slidesToShow: 1,
+                slidesToScroll: 1
+            });
+       
+        });
+
+    </script>             
+
+</body>
+</html>
