@@ -32,16 +32,8 @@ def predict(data):
     x2 = clmodel.predict(X)
     x3 = model.predict(X)
     x4 = cnn.predict(X)
-    ans=[]
-    for i in range(len(x1)):
-        b=[]
-        for j in range(len(x1[i])):
-            z = x1[i][j] + x2[i][j] + x3[i][j] + x4[i][j]
-            z = z/len(x1[i])
-            b.append(z)
-        ans.append(b)
-        b=[]
-    
+    ans = (x1+x2+x3+x4)/4
+    print(ans)
     return ans
 
 
@@ -66,6 +58,7 @@ def page():
                 "pred" : response[i],
                 "pred_out" : np.argmax(response[i])
             }
+            print("sentence => ",data[i],", predicted sentiment => ", np.argmax(response[i]),", predictions => ", response[i])
             output.append(ans)
     return render_template("index.html", output=output)
 
