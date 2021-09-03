@@ -3,6 +3,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import tokenizer_from_json
+import json
 
 
 # App config.
@@ -21,10 +23,12 @@ clmodel = tf.keras.models.load_model('clmodel.h5')
 model = tf.keras.models.load_model('model.h5')
 cnn = tf.keras.models.load_model('cnn.h5')
 
-def predict(data):
-    tokenizer = Tokenizer(num_words=2500,split=' ')
-    tokenizer.fit_on_texts(data)
+with open('tokenizer_json_string.txt') as json_file:
+    tokenizer_json_string = json.load(json_file)
 
+tokenizer = tokenizer_from_json(tokenizer_json_string)
+
+def predict(data):
     X= tokenizer.texts_to_sequences(data)
     X = pad_sequences(X,maxlen=50)
 
